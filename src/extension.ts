@@ -6,7 +6,7 @@ let currentLevel = 0;
 let currentListener: undefined | vscode.Disposable;
 let games = [game1_levels];
 function addLevelHeader(content: string, level: number): string {
-  return `Level ${level}:\n${content}`;
+  return `Level ${level.toString().padStart(3, "0")}:\n${content}`;
 }
 function getGameLevel(game: number) {
   return addLevelHeader(games[game][currentLevel], currentLevel);
@@ -21,13 +21,17 @@ async function changeSandboxContent(
     });
   }
   const editor = await vscode.window.showTextDocument(sandboxDocument);
-  editor.edit(async (editBuilder) => {
+  await editor.edit(async (editBuilder) => {
     if (!sandboxDocument) return;
     const entireRange = new vscode.Range(
       sandboxDocument.positionAt(0),
       sandboxDocument.positionAt(sandboxDocument.getText().length)
     );
     editBuilder.replace(entireRange, content);
+    await editor.revealRange(
+      new vscode.Range(0, 0, 0, 0),
+      vscode.TextEditorRevealType.AtTop
+    );
   });
   let line = 0;
   let char = 0;
@@ -43,10 +47,6 @@ async function changeSandboxContent(
   }
   let newCursorPos = new vscode.Position(line, char);
   editor.selection = new vscode.Selection(newCursorPos, newCursorPos);
-  await editor.revealRange(
-    new vscode.Range(0, 0, 0, 0),
-    vscode.TextEditorRevealType.AtTop
-  );
   return editor;
 }
 
