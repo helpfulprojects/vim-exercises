@@ -14,8 +14,12 @@
   "contributes": {
     "commands": [
       {
-        "command": "vim-exercises.helloWorld",
-        "title": "Hello World"
+        "command": "vim-exercises.game0-hjkl",
+        "title": "Game 0: HJKL"
+      },
+      {
+        "command": "vim-exercises.game1-relative-line-jump",
+        "title": "Game 1: Relative Line Jump"
       }
     ]
   },
