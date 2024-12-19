@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { game0_levels } from "./levels/game0";
+import { game3_levels } from "./levels/game3";
 
 let sandboxDocument: undefined | vscode.TextDocument;
 let currentLevel = 0;
@@ -175,6 +176,14 @@ export function activate(context: vscode.ExtensionContext) {
       games[2] = generateGame2Levels(999);
       let editor = await changeSandboxContent(getGameLevel(2));
       gameLoop(2, editor);
+    })
+  );
+  context.subscriptions.push(
+    vscode.commands.registerCommand("vim-exercises.game3-f", async () => {
+      currentLevel = 0;
+      games[3] = game3_levels;
+      let editor = await changeSandboxContent(getGameLevel(3));
+      gameLoop(3, editor);
     })
   );
 }

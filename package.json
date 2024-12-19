@@ -24,6 +24,10 @@
       {
         "command": "vim-exercises.game2-ia",
         "title": "Game 2: i or a for input mode"
+      },
+      {
+        "command": "vim-exercises.game3-f",
+        "title": "Game 3: ; and , for f and F"
       }
     ]
   },
