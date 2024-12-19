@@ -29,6 +29,45 @@ function generateGame1Level(visibleLinesCount: number): string {
   levelContent[startPosition] = "s----------------\n";
   return levelContent.join("");
 }
+function generateGame2Level(height: number) {
+  let levelContent = [];
+  const WIDTH_HALF = 7;
+  const WIDTH = 2 * WIDTH_HALF + 1;
+  let base = [];
+  for (let i = 0; i < WIDTH; i++) {
+    base.push("*");
+  }
+  const left = "+" + base.join("") + "*";
+  const right = "*" + base.join("") + "+";
+  const bridge = "+" + base.join("") + "+";
+  const end = "e" + base.join("") + "e";
+  const additions = [left, right, bridge];
+  base[WIDTH_HALF] = "s";
+  const start = "+" + base.join("") + "+";
+  levelContent.push(start);
+  let layerPosition = getRandomInt(2);
+  let pastLayerPosition: undefined | number;
+  while (levelContent.length < height) {
+    if (
+      typeof pastLayerPosition !== "undefined" &&
+      pastLayerPosition != layerPosition
+    ) {
+      levelContent.push(additions[2]);
+    }
+    levelContent.push(additions[layerPosition]);
+    pastLayerPosition = layerPosition;
+    layerPosition = getRandomInt(2);
+  }
+  levelContent.push(end);
+  return levelContent.join("\n");
+}
+function generateGame2Levels(levelsAmount: number) {
+  let gameLevels = [];
+  for (let i = 0; i < levelsAmount; i++) {
+    gameLevels.push(generateGame2Level(Math.ceil((i + 1) / 10) * 10));
+  }
+  return gameLevels;
+}
 function addLevelHeader(content: string, level: number): string {
   return `Level ${level.toString().padStart(3, "0")}:\n${content}`;
 }
@@ -129,6 +168,14 @@ export function activate(context: vscode.ExtensionContext) {
         gameLoop(1, editor);
       }
     )
+  );
+  context.subscriptions.push(
+    vscode.commands.registerCommand("vim-exercises.game2-ia", async () => {
+      currentLevel = 0;
+      games[2] = generateGame2Levels(999);
+      let editor = await changeSandboxContent(getGameLevel(2));
+      gameLoop(2, editor);
+    })
   );
 }
 
